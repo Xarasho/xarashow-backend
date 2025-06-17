@@ -13,10 +13,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - vremya-backend
+      - xarashow-backend
 
 volumes:
     postgres_data:
 
 networks: 
-  vremya-backend:
+  xarashow-backend:
