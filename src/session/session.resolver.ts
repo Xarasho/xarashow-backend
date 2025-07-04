@@ -4,5 +4,5 @@ import { SessionService } from './session.service'
 
 @Resolver('Session')
 export class SessionResolver {
-	constructor(private readonly sessionService: SessionService) {}
+	public constructor(private readonly sessionService: SessionService) {}
 }
