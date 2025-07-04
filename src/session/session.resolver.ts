@@ -10,7 +10,7 @@ import { SessionService } from './session.service'
 export class SessionResolver {
 	public constructor(private readonly sessionService: SessionService) {}
 
-	@Mutation(() => UserModel, { name: 'login' })
+	@Mutation(() => UserModel, { name: 'loginUser' })
 	public async login(
 		@Context() { req }: GqlContext,
 		@Args('data') input: LoginInput
@@ -18,7 +18,7 @@ export class SessionResolver {
 		return this.sessionService.login(req, input)
 	}
 
-	@Mutation(() => Boolean, { name: 'logout' })
+	@Mutation(() => Boolean, { name: 'logoutUser' })
 	public async logout(@Context() { req }: GqlContext) {
 		return this.sessionService.logout(req)
 	}
