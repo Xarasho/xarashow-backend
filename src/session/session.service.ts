@@ -1,7 +1,8 @@
 import {
 	Injectable,
 	InternalServerErrorException,
-	NotFoundException
+	NotFoundException,
+	UnauthorizedException
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { verify } from 'argon2'
@@ -15,7 +16,7 @@ import { LoginInput } from './inputs/login.input'
 export class SessionService {
 	public constructor(
 		private readonly prismaService: PrismaService,
-		private readonly config: ConfigService
+		private readonly configService: ConfigService
 	) {}
 
 	public async login(req: Request, input: LoginInput) {
@@ -37,13 +38,14 @@ export class SessionService {
 		const isValidPassword = await verify(user.password, password)
 
 		if (!isValidPassword) {
-			throw new NotFoundException('Invalid password')
+			throw new UnauthorizedException('Invalid password')
 		}
 
 		return new Promise((resolve, reject) => {
 			req.session.createdAt = new Date()
 			req.session.userId = user.id
 
+			console.log('Saving session:', req.session)
 			req.session.save(err => {
 				if (err) {
 					return reject(
@@ -51,7 +53,7 @@ export class SessionService {
 					)
 				}
 
-				resolve({ user })
+				resolve(user)
 			})
 		})
 	}
@@ -68,7 +70,7 @@ export class SessionService {
 				}
 
 				req.res.clearCookie(
-					this.config.getOrThrow<string>('SESSION_NAME')
+					this.configService.getOrThrow<string>('SESSION_NAME')
 				)
 				resolve(true)
 			})

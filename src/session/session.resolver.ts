@@ -1,7 +1,7 @@
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql'
 
 import { UserModel } from '../modules/auth/account/models/user.model'
-import { GqlContext } from '../shared/types/gql-context.types'
+import type { GqlContext } from '../shared/types/gql-context.types'
 
 import { LoginInput } from './inputs/login.input'
 import { SessionService } from './session.service'
