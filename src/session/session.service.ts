@@ -1,4 +1,56 @@
-import { Injectable } from '@nestjs/common';
+import {
+	Injectable,
+	InternalServerErrorException,
+	NotFoundException
+} from '@nestjs/common'
+import { verify } from 'argon2'
+import type { Request } from 'express'
+
+import { PrismaService } from '../core/prisma/prisma.service'
+
+import { LoginInput } from './inputs/login.input'
 
 @Injectable()
-export class SessionService {}
+export class SessionService {
+	public constructor(private readonly prismaService: PrismaService) {}
+
+	public async login(req: Request, input: LoginInput) {
+		const { login, password } = input
+
+		const user = await this.prismaService.user.findFirst({
+			where: {
+				OR: [
+					{ username: { equals: login } },
+					{ email: { equals: login } }
+				]
+			}
+		})
+
+		if (!user) {
+			throw new NotFoundException('User not found')
+		}
+
+		const isValidPassword = await verify(user.password, password)
+
+		if (!isValidPassword) {
+			throw new NotFoundException('Invalid password')
+		}
+
+		return new Promise((resolve, reject) => {
+			req.session.createdAt = new Date()
+			req.session.userId = user.id
+
+			req.session.save(err => {
+				if (err) {
+					return reject(
+						new InternalServerErrorException('Session save error')
+					)
+				}
+
+				resolve({ user })
+			})
+		})
+	}
+
+	public async logout() {}
+}
