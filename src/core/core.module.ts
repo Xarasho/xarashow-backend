@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
 
 import { AccountModule } from '../modules/auth/account/account.module'
-import { SessionModule } from '../session/session.module'
+import { SessionModule } from '../modules/auth/session/session.module'
 import { IS_DEV_ENV } from '../shared/utils/is-dev.util'
 
 import { getGraphQLConfig } from './config/graphql.config'

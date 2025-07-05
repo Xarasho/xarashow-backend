@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config'
 import { verify } from 'argon2'
 import type { Request } from 'express'
 
-import { PrismaService } from '../core/prisma/prisma.service'
+import { PrismaService } from '../../../core/prisma/prisma.service'
 
 import { LoginInput } from './inputs/login.input'
 
@@ -69,6 +69,7 @@ export class SessionService {
 					)
 				}
 
+				console.log('Session Stop!', req.session)
 				req.res.clearCookie(
 					this.configService.getOrThrow<string>('SESSION_NAME')
 				)

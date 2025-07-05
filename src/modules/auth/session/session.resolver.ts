@@ -1,10 +1,11 @@
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql'
 
-import { UserModel } from '../modules/auth/account/models/user.model'
-import type { GqlContext } from '../shared/types/gql-context.types'
+import { UserModel } from '../account/models/user.model'
+import type { GqlContext } from '../../../shared/types/gql-context.types'
 
 import { LoginInput } from './inputs/login.input'
 import { SessionService } from './session.service'
+// import { Authorization } from '../shared/decorators/auth.decorator'
 
 @Resolver('Session')
 export class SessionResolver {
@@ -18,6 +19,7 @@ export class SessionResolver {
 		return this.sessionService.login(req, input)
 	}
 
+	// @Authorization()
 	@Mutation(() => Boolean, { name: 'logoutUser' })
 	public async logout(@Context() { req }: GqlContext) {
 		return this.sessionService.logout(req)

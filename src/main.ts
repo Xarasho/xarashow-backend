@@ -32,6 +32,7 @@ async function bootstrap() {
 			saveUninitialized: false,
 			cookie: {
 				domain: config.getOrThrow<string>('SESSION_DOMAIN'),
+				// domain: undefined,
 				maxAge: ms(config.getOrThrow<StringValue>('SESSION_MAX_AGE')),
 				httpOnly: parseBoolean(
 					config.getOrThrow<string>('SESSION_HTTP_ONLY')
