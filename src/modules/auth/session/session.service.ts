@@ -19,7 +19,7 @@ export class SessionService {
 		private readonly configService: ConfigService
 	) {}
 
-	public async login(req: Request, input: LoginInput) {
+	public async login(req: Request, input: LoginInput, userAgent: string) {
 		const { login, password } = input
 
 		const user = await this.prismaService.user.findFirst({
