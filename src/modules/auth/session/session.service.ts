@@ -11,6 +11,7 @@ import type { Request } from 'express'
 import { PrismaService } from '../../../core/prisma/prisma.service'
 
 import { LoginInput } from './inputs/login.input'
+import { getSessionMetadata } from '@/src/shared/utils/session-metadata.util'
 
 @Injectable()
 export class SessionService {
@@ -41,9 +42,12 @@ export class SessionService {
 			throw new UnauthorizedException('Invalid password')
 		}
 
+		const metadata = getSessionMetadata(req, userAgent)
+
 		return new Promise((resolve, reject) => {
 			req.session.createdAt = new Date()
 			req.session.userId = user.id
+			req.session.metadata = metadata
 
 			console.log('Saving session:', req.session)
 			req.session.save(err => {
